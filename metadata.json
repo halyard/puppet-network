@@ -8,7 +8,10 @@
   "project_page": "https://github.com/halyard/puppet-network",
   "issues_url": "https://github.com/halyard/puppet-network/issues",
   "dependencies": [
-
+    {
+      "name": "halyard/sysctl",
+      "version_requirement": ">= 1.1.2"
+    }
   ],
   "operatingsystem_support": [
     {
