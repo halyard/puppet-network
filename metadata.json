@@ -1,0 +1,22 @@
+{
+  "name": "halyard-network",
+  "version": "0.1.0",
+  "author": "Les Aker",
+  "summary": "Configure network settings",
+  "license": "MIT",
+  "source": "https://github.com/halyard/puppet-network",
+  "project_page": "https://github.com/halyard/puppet-network",
+  "issues_url": "https://github.com/halyard/puppet-network/issues",
+  "dependencies": [
+
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Darwin",
+      "operatingsystemmajrelease": [
+        "14",
+        "15"
+      ]
+    }
+  ]
+}
