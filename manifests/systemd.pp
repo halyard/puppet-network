@@ -18,7 +18,7 @@ class network::systemd {
     if $iface != 'lo' {
       file { "/etc/systemd/network/${iface}.network":
         ensure   => file,
-        contents => template('network/interface.network'),
+        contents => template('network/interface.network.erb'),
         notify   => Service['systemd-networkd'],
       }
     }
