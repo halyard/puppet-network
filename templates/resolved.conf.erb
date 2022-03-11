@@ -1,0 +1,14 @@
+[Resolve]
+DNS=<%= @resolvers.join(' ') %>
+FallbackDNS=<%= @resolvers.join(' ') %>
+Domains=<%= @domains.join(' ') %>
+DNSSEC=no
+DNSOverTLS=<%= @dnsovertls ? 'yes' : 'no' %>
+MulticastDNS=no
+LLMNR=no
+Cache=no-negative
+CacheFromLocalhost=no
+DNSStubListener=yes
+DNSStubListenerExtra=
+ReadEtcHosts=yes
+ResolveUnicastSingleLabel=no
