@@ -14,6 +14,20 @@ class network::systemd {
     enable => true,
   }
 
+  $facts['networking']['interfaces'].each |String $iface, Any $value| {
+    if $iface != 'lo' {
+      file { "/etc/systemd/network/${iface}.network":
+        ensure   => file,
+        contents => template('network/interface.network'),
+        notify   => Service['systemd-networkd'],
+      }
+    }
+  }
+  service { 'systemd-networkd':
+    ensure => running,
+    enable => true,
+  }
+
   # Remove network overrides on Linodes
   $linode_files = [
     '/etc/systemd/network/05-eth0.network',
@@ -21,10 +35,7 @@ class network::systemd {
     '/etc/systemd/network/.05-eth0.network.linode-last',
   ]
   file { $linode_files:
-    ensure  => absent,
-  }
-  ~> service { 'systemd-networkd':
-    ensure => running,
-    enable => true,
+    ensure => absent,
+    notify => Service['systemd-networkd'],
   }
 }
