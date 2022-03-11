@@ -13,4 +13,18 @@ class network::systemd {
     ensure => running,
     enable => true,
   }
+
+  # Remove network overrides on Linodes
+  $linode_files = [
+    '/etc/systemd/network/05-eth0.network',
+    '/etc/systemd/network/.05-eth0.network.linode-orig',
+    '/etc/systemd/network/.05-eth0.network.linode-last',
+  ]
+  file { $linode_files:
+    ensure  => absent,
+  }
+  ~> service { 'systemd-networkd':
+    ensure => running,
+    enable => true,
+  }
 }
