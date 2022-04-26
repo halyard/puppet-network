@@ -38,7 +38,7 @@ class network::systemd {
   $bridge_children = values($bridges)
 
   $facts['networking']['interfaces'].each |String $iface, Any $value| {
-    unless $iface == 'lo' or $iface in $bridge_children {
+    unless $iface == 'lo' or $iface in $bridge_children or $iface in $bridges {
       file { "/etc/systemd/network/${iface}.network":
         ensure  => file,
         content => template('network/interface.network.erb'),
