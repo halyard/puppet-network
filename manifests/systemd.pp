@@ -38,7 +38,7 @@ class network::systemd {
     }
   }
 
-  $bridge_children = values($bridges)
+  $bridge_children = values($bridges).flatten
 
   $facts['networking']['interfaces'].each |String $iface, Any $value| {
     unless $iface == 'lo' or $iface in $bridge_children or $iface in $bridges or $iface =~ /^tap/ {
