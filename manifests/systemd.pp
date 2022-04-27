@@ -15,7 +15,7 @@ class network::systemd {
     enable => true,
   }
 
-  $bridges.each |String $bridge, String $child| {
+  $bridges.each |String $bridge, Array[String] $children| {
     file { "/etc/systemd/network/${bridge}.network":
       ensure  => file,
       content => template('network/bridge.network.erb'),
@@ -28,17 +28,20 @@ class network::systemd {
       notify  => Service['systemd-networkd'],
     }
 
-    file { "/etc/systemd/network/${child}.network":
-      ensure  => file,
-      content => template('network/child.network.erb'),
-      notify  => Service['systemd-networkd'],
+    $children.each |String $child| {
+      $child_file_name = regsubst($child, '\*', '')
+      file { "/etc/systemd/network/${child_file_name}.network":
+        ensure  => file,
+        content => template('network/child.network.erb'),
+        notify  => Service['systemd-networkd'],
+      }
     }
   }
 
   $bridge_children = values($bridges)
 
   $facts['networking']['interfaces'].each |String $iface, Any $value| {
-    unless $iface == 'lo' or $iface in $bridge_children or $iface in $bridges {
+    unless $iface == 'lo' or $iface in $bridge_children or $iface in $bridges or $iface =~ /^tap/ {
       file { "/etc/systemd/network/${iface}.network":
         ensure  => file,
         content => template('network/interface.network.erb'),

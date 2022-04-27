@@ -1,4 +1,4 @@
 [NetDev]
 Name=<%= @bridge %>
 Kind=bridge
-MACAddress=<%= @facts['networking']['interfaces'][@child]['mac'] %>
+MACAddress=<%= @facts['networking']['interfaces'][@children.first]['mac'] %>
