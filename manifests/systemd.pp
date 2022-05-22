@@ -5,6 +5,7 @@ class network::systemd {
   $domains = $network::domains
   $dnsovertls = $network::dnsovertls
   $bridges = $network::bridges
+  $ignore = $network::ignore
 
   file { '/etc/systemd/resolved.conf':
     ensure  => file,
@@ -41,7 +42,7 @@ class network::systemd {
   $bridge_children = values($bridges).flatten
 
   $facts['networking']['interfaces'].each |String $iface, Any $value| {
-    unless $iface == 'lo' or $iface in $bridge_children or $iface in $bridges or $iface =~ /^(tap|veth)/ {
+    unless $iface in $bridge_children or $ignore.any |$item| { $iface.match($item) } {
       file { "/etc/systemd/network/${iface}.network":
         ensure  => file,
         content => template('network/interface.network.erb'),
