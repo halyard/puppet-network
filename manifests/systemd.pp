@@ -42,7 +42,7 @@ class network::systemd {
   $bridge_children = values($bridges).flatten
 
   $facts['networking']['interfaces'].each |String $iface, Any $value| {
-    unless $iface in $bridge_children or $ignore.any |$item| { $iface.match($item) } {
+    unless $iface in $bridge_children or $iface in $bridges or $ignore.any |$item| { $iface.match($item) } {
       file { "/etc/systemd/network/${iface}.network":
         ensure  => file,
         content => template('network/interface.network.erb'),
