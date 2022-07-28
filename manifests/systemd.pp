@@ -7,6 +7,11 @@ class network::systemd {
   $bridges = $network::bridges
   $ignore = $network::ignore
 
+  file { '/etc/resolv.conf':
+    ensure => link,
+    target => '/run/systemd/resolve/stub-resolv.conf',
+  }
+
   file { '/etc/systemd/resolved.conf':
     ensure  => file,
     content => template('network/resolved.conf.erb'),
