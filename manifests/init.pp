@@ -10,7 +10,7 @@ class network (
   Array[String] $domains = [],
   Boolean $dnsovertls = true,
   Hash[String, Array[String]] $bridges = {},
-  Array[String] $ignore = ['^lo$', '^docker0$', '^(tap|veth)', '^wg\d+'],
+  Array[String] $ignore = ['^lo$', '^docker\d+$', '^(tap|veth)', '^wg\d+'],
 ) {
   case $facts['os']['family'] {
     'Archlinux': { include network::systemd }
