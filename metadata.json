@@ -1,6 +1,6 @@
 {
   "name": "halyard-network",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "author": "Les Aker",
   "summary": "Configure network settings",
   "license": "MIT",
