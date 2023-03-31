@@ -15,6 +15,7 @@ class network (
   case $facts['os']['family'] {
     'Archlinux': { include network::systemd }
     'Arch': { include network::systemd }
+    'Debian': { include network::systemd }
     default: { fail("Module does not support ${facts['os']['family']}") }
   }
 }
