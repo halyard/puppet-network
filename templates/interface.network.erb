@@ -4,6 +4,10 @@ Name=<%= @iface %>
 [Network]
 DHCP=yes
 LLMNR=no
+<% @vlans.each do |vlan_name, params| -%>
+<% next unless params['parent'] == @iface -%>
+VLAN=<%= vlan_name %>
+<% end -%>
 
 [DHCPv4]
 UseDNS=no
