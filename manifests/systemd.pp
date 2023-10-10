@@ -5,6 +5,7 @@ class network::systemd {
   $domains = $network::domains
   $dnsovertls = $network::dnsovertls
   $bridges = $network::bridges
+  $vlans = $network::vlans
   $ignore = $network::ignore
 
   file { '/etc/resolv.conf':
@@ -46,8 +47,22 @@ class network::systemd {
 
   $bridge_children = values($bridges).flatten
 
+  $vlans.each |String $vlan_name, Hash[String, String] $params| {
+    file { "/etc/systemd/network/${vlan_name}.network":
+      ensure  => file,
+      content => template('network/vlan.network.erb'),
+      notify  => Service['systemd-networkd'],
+    }
+
+    file { "/etc/systemd/network/${vlan_name}.netdev":
+      ensure  => file,
+      content => template('network/vlan.netdev.erb'),
+      notify  => Service['systemd-networkd'],
+    }
+  }
+
   $facts['networking']['interfaces'].each |String $iface, Any $value| {
-    unless $iface in $bridge_children or $iface in $bridges or $ignore.any |$item| { $iface.match($item) } {
+    unless $iface in $bridge_children or $iface in $bridges or $iface in $vlans or $ignore.any |$item| { $iface.match($item) } {
       file { "/etc/systemd/network/${iface}.network":
         ensure  => file,
         content => template('network/interface.network.erb'),
