@@ -11,3 +11,6 @@ VLAN=<%= vlan_name %>
 
 [DHCPv4]
 UseDNS=no
+<% if @iface == @primary_interface -%>
+RouteMetric=1000
+<% end -%>

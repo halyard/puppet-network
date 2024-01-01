@@ -61,13 +61,17 @@ class network::systemd {
     }
   }
 
-  $facts['networking']['interfaces'].each |String $iface, Any $value| {
-    unless $iface in $bridge_children or $iface in $bridges or $iface in $vlans or $ignore.any |$item| { $iface.match($item) } {
-      file { "/etc/systemd/network/${iface}.network":
-        ensure  => file,
-        content => template('network/interface.network.erb'),
-        notify  => Service['systemd-networkd'],
-      }
+  $real_interfaces = $facts['networking']['interfaces'].filter |String $iface, Any $value| {
+    !($iface in $bridge_children or $iface in $bridges or $iface in $vlans or $ignore.any |$item| { $iface.match($item) })
+  }
+
+  $primary_interface = sort($real_interfaces)[0]
+
+  $real_interfaces.each |String $iface, Any $value|
+    file { "/etc/systemd/network/${iface}.network":
+      ensure  => file,
+      content => template('network/interface.network.erb'),
+      notify  => Service['systemd-networkd'],
     }
   }
   service { 'systemd-networkd':
