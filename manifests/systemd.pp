@@ -67,13 +67,14 @@ class network::systemd {
 
   $primary_interface = sort($real_interfaces)[0]
 
-  $real_interfaces.each |String $iface, Any $value|
+  $real_interfaces.each |String $iface, Any $value| {
     file { "/etc/systemd/network/${iface}.network":
       ensure  => file,
       content => template('network/interface.network.erb'),
       notify  => Service['systemd-networkd'],
     }
   }
+
   service { 'systemd-networkd':
     ensure => running,
     enable => true,
