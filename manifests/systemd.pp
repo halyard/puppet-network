@@ -65,7 +65,7 @@ class network::systemd {
     !($iface in $bridge_children or $iface in $bridges or $iface in $vlans or $ignore.any |$item| { $iface.match($item) })
   }
 
-  $primary_interface = sort($real_interfaces)[0]
+  $primary_interface = sort(keys($real_interfaces))[0]
 
   $real_interfaces.each |String $iface, Any $value| {
     file { "/etc/systemd/network/${iface}.network":
